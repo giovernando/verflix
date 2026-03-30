@@ -22,8 +22,9 @@ export default function Profile() {
   const [watchlist, setWatchlist] = useState<Movie[]>([]);
 
   // Edit State
-  const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState("");
+  const [newUsername, setNewUsername] = useState("");
 
   // Preferences State
   const [preferences, setPreferences] = useState({
@@ -58,6 +59,7 @@ export default function Profile() {
       if (profileErr) throw profileErr;
       setProfile(profileData);
       setNewName(profileData.name || "");
+      setNewUsername(profileData.username || "");
 
       if (profileData.preferences) {
         setPreferences(profileData.preferences);
@@ -91,17 +93,20 @@ export default function Profile() {
     }
   };
 
-  const handleUpdateName = async () => {
+  const handleUpdateProfile = async () => {
     if (!user) return;
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ name: newName })
+        .update({ 
+          name: newName,
+          username: newUsername 
+        })
         .eq("id", user.id);
       
       if (error) throw error;
-      setProfile({ ...profile, name: newName });
-      setIsEditingName(false);
+      setProfile({ ...profile, name: newName, username: newUsername });
+      setIsEditing(false);
       toast.success("Profile updated successfully!");
     } catch (error: any) {
       toast.error(error.message || "Failed to update profile");
@@ -276,11 +281,11 @@ export default function Profile() {
                   <Button 
                     variant="ghost" 
                     size="sm"
-                    onClick={() => setIsEditingName(!isEditingName)}
+                    onClick={() => setIsEditing(!isEditing)}
                     className="text-primary hover:text-primary/80 hover:bg-primary/10"
                   >
                     <Pencil className="h-4 w-4 mr-2" />
-                    {isEditingName ? "Cancel" : "Edit Profile"}
+                    {isEditing ? "Cancel" : "Edit Profile"}
                   </Button>
                 </div>
                 
@@ -289,18 +294,33 @@ export default function Profile() {
                     {/* Full Name */}
                     <div className="space-y-2">
                       <label className="text-xs font-semibold text-white/50 uppercase tracking-wider">Full Name</label>
-                      {isEditingName ? (
-                        <div className="flex gap-2">
-                          <Input 
-                            value={newName}
-                            onChange={(e) => setNewName(e.target.value)}
-                            className="bg-black/40 border-white/20 text-white"
-                          />
-                          <Button onClick={handleUpdateName} className="bg-primary hover:bg-primary/90">Save</Button>
-                        </div>
+                      {isEditing ? (
+                        <Input 
+                          value={newName}
+                          onChange={(e) => setNewName(e.target.value)}
+                          className="bg-black/40 border-white/20 text-white"
+                          placeholder="Full Name"
+                        />
                       ) : (
                         <div className="p-3 bg-black/40 rounded-lg border border-white/5 text-white/90 font-medium">
                           {profile?.name}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Username */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold text-white/50 uppercase tracking-wider">Username</label>
+                      {isEditing ? (
+                        <Input 
+                          value={newUsername}
+                          onChange={(e) => setNewUsername(e.target.value)}
+                          className="bg-black/40 border-white/20 text-white"
+                          placeholder="Username"
+                        />
+                      ) : (
+                        <div className="p-3 bg-black/40 rounded-lg border border-white/5 text-white/90 font-medium">
+                          {profile?.username || `@${profile?.name?.toLowerCase().replace(/\s/g, '_')}`}
                         </div>
                       )}
                     </div>
@@ -313,6 +333,14 @@ export default function Profile() {
                       </div>
                     </div>
                   </div>
+
+                  {isEditing && (
+                    <div className="flex justify-end pt-4">
+                      <Button onClick={handleUpdateProfile} className="bg-primary hover:bg-primary/90">
+                        Save Changes
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </motion.div>
 
