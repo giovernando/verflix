@@ -312,6 +312,15 @@ export default function Login() {
                 </button>
               </div>
               {errors.password && <p className="error-msg">⚠ {errors.password}</p>}
+              
+              <div className="flex justify-end mt-2">
+                <Link 
+                  to="/auth/forgot-password" 
+                  className="text-[10px] uppercase tracking-widest text-[#b8973a]/70 hover:text-[#b8973a] transition-colors font-semibold"
+                >
+                  Lupa password?
+                </Link>
+              </div>
             </div>
 
             {/* Submit */}
