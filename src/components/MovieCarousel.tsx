@@ -64,7 +64,7 @@ export const MovieCarousel = ({ title, movies }: MovieCarouselProps) => {
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {movies.map((movie) => (
-            <div key={movie.id} className="w-[150px] md:w-[200px] lg:w-[250px]">
+            <div key={movie.id} className="w-[120px] md:w-[160px] lg:w-[200px] flex-none">
               <MovieCard movie={movie} />
             </div>
           ))}
