@@ -32,7 +32,14 @@ export default function Watchlist() {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
+      console.log("Supabase watchlist response:", { data, error });
+
       if (error) throw error;
+
+      if (!data) {
+        setMovies([]);
+        return;
+      }
 
       const movieList: Movie[] = data.map((item) => ({
         id: item.movie_id,
@@ -45,6 +52,7 @@ export default function Watchlist() {
         genre_ids: [],
       }));
 
+      console.log("Parsed movieList:", movieList);
       setMovies(movieList);
     } catch (error) {
       console.error("Error loading watchlist:", error);

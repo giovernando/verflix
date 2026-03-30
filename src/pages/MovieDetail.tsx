@@ -66,15 +66,16 @@ export default function MovieDetail() {
 
     try {
       if (isInWatchlist) {
-        await supabase
+        const { error } = await supabase
           .from("watchlist")
           .delete()
           .eq("movie_id", movie.id)
           .eq("user_id", user.id);
+        if (error) throw error;
         setIsInWatchlist(false);
         toast.success("Removed from My List");
       } else {
-        await supabase.from("watchlist").insert({
+        const { error } = await supabase.from("watchlist").insert({
           user_id: user.id,
           movie_id: movie.id,
           title: movie.title,
@@ -84,12 +85,13 @@ export default function MovieDetail() {
           release_date: movie.release_date,
           vote_average: movie.vote_average,
         });
+        if (error) throw error;
         setIsInWatchlist(true);
         toast.success("Added to My List");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error toggling watchlist:", error);
-      toast.error("Failed to update watchlist");
+      toast.error(`Gagal menyimpan: ${error.message || "Unknown error"}`);
     }
   };
 

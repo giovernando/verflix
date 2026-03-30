@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Play, Plus, Check, Info } from "lucide-react";
 import { Movie, tmdb } from "@/lib/tmdb";
@@ -16,6 +16,21 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuthStore();
+
+  // Cek status watchlist dari database saat komponen mount
+  useEffect(() => {
+    const checkWatchlist = async () => {
+      if (!user) return;
+      const { data } = await supabase
+        .from("watchlist")
+        .select("id")
+        .eq("movie_id", movie.id)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setIsInWatchlist(!!data);
+    };
+    checkWatchlist();
+  }, [movie.id, user]);
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,15 +52,16 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
 
     try {
       if (isInWatchlist) {
-        await supabase
+        const { error } = await supabase
           .from("watchlist")
           .delete()
           .eq("movie_id", movie.id)
           .eq("user_id", user.id);
+        if (error) throw error;
         setIsInWatchlist(false);
         toast.success("Removed from My List");
       } else {
-        await supabase.from("watchlist").insert({
+        const { error } = await supabase.from("watchlist").insert({
           user_id: user.id,
           movie_id: movie.id,
           title: movie.title,
@@ -55,12 +71,13 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           release_date: movie.release_date,
           vote_average: movie.vote_average,
         });
+        if (error) throw error;
         setIsInWatchlist(true);
         toast.success("Added to My List");
       }
     } catch (error) {
       console.error("Error toggling watchlist:", error);
-      toast.error("Failed to update watchlist");
+      toast.error("Gagal menyimpan ke My List. Pastikan kamu sudah login.");
     }
   };
 
