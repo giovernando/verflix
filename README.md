@@ -24,31 +24,6 @@ A modern movie streaming application inspired by Netflix, built with React and T
 - Node.js (version 16 or higher)
 - npm or yarn
 
-### Installation
-
-1. Clone the repository:
-   ```sh
-   git clone <YOUR_GIT_URL>
-   cd flickr-box-main
-   ```
-
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-
-3. Set up environment variables:
-   - Create a `.env` file in the root directory
-   - Add your Supabase URL and API key
-   - Add your TMDB API key
-
-4. Start the development server:
-   ```sh
-   npm run dev
-   ```
-
-5. Open [http://localhost:5173](http://localhost:5173) in your browser.
-
 ## Project Structure
 
 - `src/components/` - Reusable UI components
