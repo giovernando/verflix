@@ -172,6 +172,14 @@ export default function Register() {
               Coba daftar ulang
             </button>
           </p>
+          <div className="anim-fade-d3 mt-4 pt-4 border-t border-white/10">
+            <p className="text-[#555] text-xs">
+              Sudah verifikasi?{" "}
+              <Link to="/auth/login" className="text-[#b8973a] hover:underline font-medium">
+                Login sekarang →
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     );
