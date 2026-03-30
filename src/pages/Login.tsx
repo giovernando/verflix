@@ -196,7 +196,7 @@ export default function Login() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1400&q=80')`,
+            backgroundImage: `url('https://assets.nflxext.com/ffe/siteui/vlv3/51c1d7f7-3179-4a55-93d9-704722898999/be90e543-c951-40d0-9ef5-e067f3e33d16/US-en-20240610-popsignuptwoweeks-perspective_alpha_website_large.jpg')`,
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/20 via-transparent to-[#0a0a0a]/60" />
